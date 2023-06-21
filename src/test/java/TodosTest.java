@@ -27,28 +27,90 @@ public class TodosTest {
         Task[] actual = todos.findAll();
         Assertions.assertArrayEquals(expected, actual);
     }
-
+    
     @Test
-    public void findQueryInTheTask() {
-        Task task = new Task(5);
-        task.matches("Позвонить");
+
+    // находится несколько задач
+    public void findSeveralTasks() {
+
+        // создаем задачи
+
+        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
+
+        String[] subtasks = { "Позвонить по работе", "Сходить на собеседование", "Обновить резюме на hh" };
+        Epic epic = new Epic(55, subtasks);
+
+        Meeting meeting = new Meeting(
+                555,
+                "Позвонить подруге",
+                "Винное казино",
+                "Во вторник после обеда"
+        );
+
+        Todos todos = new Todos();
+
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        // сравнение
+        Task[] expected = { simpleTask, epic, meeting };
+        Task[] actual = todos.search("Позвонить");
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void findQueryInTheSimpleTask() {
-        SimpleTask simpleTask = new SimpleTask(63, "Покормить котов");
 
-        Task task = new Task(63);
-        task.matches("Кот");
+    // Находится 1 задача
+    public void findOnlyOneQuery() {
+        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
+
+        String[] subtasks = { "Позвонить по работе", "Сходить на собеседование", "Обновить резюме на hh" };
+        Epic epic = new Epic(55, subtasks);
+
+        Meeting meeting = new Meeting(
+                555,
+                "Позвонить подруге",
+                "Винное казино",
+                "Во вторник после обеда"
+        );
+
+        Todos todos = new Todos();
+
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        // сравнение
+        Task[] expected = { meeting };
+        Task[] actual = todos.search("казино");
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void findQueryInTheEpic() {
-        String[] subtasks = {"Бег", "Пресс", "Приседания", "Бокс"};
+    // Не находятся задачи
+    public void notFindQuery() {
+        SimpleTask simpleTask = new SimpleTask(5, "Позвонить родителям");
 
-        Epic epic = new Epic(100, subtasks);
+        String[] subtasks = { "Позвонить по работе", "Сходить на собеседование", "Обновить резюме на hh" };
+        Epic epic = new Epic(55, subtasks);
 
-        Task task = new Task(100);
-        task.matches("Бокс");
+        Meeting meeting = new Meeting(
+                555,
+                "Позвонить подруге",
+                "Винное казино",
+                "Во вторник после обеда"
+        );
+
+        Todos todos = new Todos();
+
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        // сравнение
+        Task[] expected = {};
+        Task[] actual = todos.search("Вера в себя");
+        Assertions.assertArrayEquals(expected, actual);
     }
 }

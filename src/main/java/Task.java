@@ -11,7 +11,7 @@ public class Task {
         return id;
     }
 
-
+// поисковый запрос @param query
     public boolean matches(String query) {
         return false;
     }
